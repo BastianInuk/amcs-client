@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8" /><title>
+	Log On
+</title>
+	<link rel="shortcut icon" href="/Content/Images/favicon.ico?v2" type="image/x-icon" />
+	<link rel="icon" href="/Content/Images/favicon.ico?v2" type="image/ico" />
+	
+	<link rel='stylesheet' href='/Areas/Core/Content/Core.35221.min.css' type='text/css' media='screen' />
+	<link rel="stylesheet" href="/Areas/Core/Content/CoreNoCompression.35221.min.css" type="text/css" media="screen"/>
+
+
+<!--[if IE]>
+	<link rel="stylesheet" href="/Areas/Core/Content/CoreIE.35221.min.css" type="text/css" media="screen"/>
+<![endif]-->
+    
+	<!-- Set the viewport to avoid zooming on mobile devices -->
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<link rel="stylesheet" href="/Areas/Core/Content/LogOn.35221.min.css" type="text/css"/>
+	<link rel='stylesheet' href='/Content/Twp.35221.min.css' type='text/css' media='screen' />
+	<link rel="stylesheet" href="/Content/SiteNoCompression.35221.min.css" type="text/css" media="screen"/>
+	<link rel='stylesheet' href='/Content/jquery-ui-custom.css' type='text/css'/><link rel='stylesheet' href='/OverrideContent/JustEat.css' type='text/css'/>
+
+
+<script type="text/javascript">
+	(function(TwpMaps)
+	{
+		TwpMaps.TileLayerProviderDefault = 'HERE';
+		TwpMaps.TileLayerProviderCustomizedUrl = '';
+		TwpMaps.AutomaticClusteringMarkersMaxCount = '1000';
+		TwpMaps.AutomaticClusteringMarkersMinZoom = '15';
+	})(window.TwpMaps = window.TwpMaps || {});
+
+	// This module can build any Urls needed by the client
+	(function (Url)
+	{
+		Url.BaseUrl = function (action, args)
+		{
+			return '/' + action + BuildArgs(args);
+		};
+		// Urls to the content folder
+		Url.CoreImage = function (image) {
+			return '/Areas/Core/Content/Images/' + image;
+		};
+
+		// Urls to controller actions
+		Url.Admin = function (action, args) {
+			return '/Core/Admin/' + action + BuildArgs(args);
+		};
+		Url.UserActivities = function (action, args) {
+			return '/Core/UserActivities/' + action + BuildArgs(args);
+		};
+		Url.ClientLog = function (action, args) {
+			return '/Core/ClientLog/' + action + BuildArgs(args);
+		};
+
+		Url.Account = function (action, args) {
+			return '/Core/Account/' + action + BuildArgs(args);
+		};
+		Url.Core = function (action, args) {
+			return '/Core/Core/' + action + BuildArgs(args);
+		};
+		Url.CoreImage = function (image)
+		{
+			return '/Areas/Core/Content/Images/' + image;
+		};
+
+		Url.External = function (url, args) {
+			return url + BuildArgs(args);
+		};
+	})(window.Url = window.Url || {});
+</script>
+
+<script type='text/javascript' src='/Areas/Core/Scripts/Twp.35221.js'></script>
+
+<script type="text/javascript">
+	(function (View)
+	{
+		
+		View.Model = JSON.ParseJSonData({"PasswordCriteriaDescription":null,"ChangePassword":false,"UserName":null,"Password":null,"NewPassword":null,"NewPasswordRetype":null,"LogonGetGpsPosition":true,"LogonGetGpsPositionEnableHighAccuracy":true,"LogonGetGpsPositionTimeout":15000,"Longitude":null,"Latitude":null,"Accuracy":null});
+		
+		View.Revision = 35221;
+		
+		View.FilterCookieLifetime = 8760;
+	}(window.View = window.View || {}));
+
+	// Initialize date formatter
+	DateFormatter.Initialize('dd-M-yy',
+		'hh:mm TT');
+
+	
+	if (View && View.Model && View.Model.TfpTime)
+		TfpTime.Update(View.Model.TfpTime);
+
+	
+	AjaxHelpers.DefaultOptions.Timeout = 30000;
+</script>
+
+<script type="text/javascript" src="/Core/Core/LangTranslations?0" charset="UTF-8" ></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script id="FilterRegion" type="text/html">
+	<span class="FilterRegion" data-bind="foreach: Filters">
+		<!-- ko if: !IsDisabled() -->
+		<span class="FilterItem" style="white-space:nowrap">
+			<label>
+				<span data-bind="text: Title"></span>
+
+				<!-- ko if: ValueType() === "Text" -->
+					<input data-bind="value: Value, css: Classes" />
+				<!-- /ko -->
+
+				<!-- ko if: ValueType() === "Integer" -->
+					<input type="number" data-bind="value: Value, css: Classes" />
+				<!-- /ko -->
+
+				<!-- ko if: ValueType() === "Date" -->
+					<input data-bind="DatePicker: { Date: Value }, css: Classes" />
+				<!-- /ko -->
+
+				<!-- ko if: ValueType() === "DateInterval" -->
+					<span data-bind="DateIntervalPicker: { From: ValueIntervalStart, To: ValueIntervalEnd, CheckMarker: true }, css: Classes"></span>
+				<!-- /ko -->
+
+				<!-- ko if: ValueType() === "Select" -->
+					<select data-bind="NamedIdOptions: Options, value: Value, css: Classes"></select>
+				<!-- /ko -->
+
+				<!-- ko if: ValueType() === "StringList" || ValueType() === "MultiSelect" || ValueType() === "Database" -->
+					<select data-bind="NamedIdMultiOptions: Options, selectedOptions: Values, css: Classes"></select>
+				<!-- /ko -->
+			</label>
+		</span>
+		<!-- /ko -->
+	</span>
+</script></head>
+<body class="ui-widget">
+	<div id="header" class="ui-widget-header">
+		
+		<div id="title" class="TopMenu">
+			<a href='/Core/Core'></a>
+		</div>
+		<div id="logo">
+			<a href='/Core/Core'></a>
+		</div>
+		<div id="pageheader">
+			<div class="HeaderElm">
+				<h1></h1>
+			</div>
+		</div>
+	</div>
+	<div id="main">
+		
+	<script type="text/javascript">
+		$(document).ready(function ()
+		{
+			// Handle placeholders in older browsers
+			function SupportPlaceholder()
+			{
+				var i = document.createElement('input');
+				return 'placeholder' in i;
+			};
+
+			function GetURLParameter(paramName)
+			{
+				var sPageURL = window.location.search.substring(1);
+				var sURLVariables = sPageURL.split('&');
+				for (var i = 0; i < sURLVariables.length; i++)
+				{
+					var sParameterName = sURLVariables[i].split('=');
+					if (sParameterName[0] == paramName)
+					{
+						return sParameterName[1];
+					}
+				}
+			};
+
+			function HandlerQueryStringLogonCredentials()
+			{
+
+				var userQueryStr = GetURLParameter("usr");
+				var passwordQueryStr = GetURLParameter("pwd");
+				if (!userQueryStr && !passwordQueryStr)
+				{
+					//none provided - focus on username
+					Log.Info("No query string credentials provided");
+					$("#UserName").focus();
+				}
+				else if (userQueryStr && passwordQueryStr)
+				{
+					//both provided - auto logon
+					$("#UserName").attr("placeholder", "");
+					$("#Password").attr("placeholder", "");
+					$("#UserName").val(userQueryStr);
+					$("#Password").val(passwordQueryStr);
+					//validate if the provided credentials actually allow to login
+					AjaxHelpers.Ajax(
+						{
+							url: Url.Account("ValidCredentials"),
+							data: {
+								userName: userQueryStr,
+								password: passwordQueryStr
+							},
+							success: function (data)
+							{
+								if (data)
+								{
+									Log.Info("Query string credentials provided - attempting automatic logon");
+									LogOn();
+								}
+								else
+								{
+									Log.Info("Invalid query string credentials provided");
+									PopupMessage.Alert(Lang.Trans("Invalid credentials provided"), Lang.Trans("Logon error"));
+								}
+							}
+						});
+				}
+				else if (userQueryStr && !passwordQueryStr)
+				{
+					//only username provided - focus on password
+					Log.Info("Query string username provided");
+					$("#UserName").attr("placeholder", "");
+					$("#UserName").val(userQueryStr);
+					//and make the username input field read-only
+					$("#UserName").attr("readonly", true);
+					$("#Password").focus();
+				}
+			};
+
+			function LogOn()
+			{
+				// Get GPS coordinates
+				
+				var popup = null;
+				GetGpsLocation();
+
+				function GetGpsLocation()
+				{
+					if (navigator.geolocation)
+					{
+						// see: https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions
+						var options = {
+							timeout: View.Model.LogonGetGpsPositionTimeout, //defaults to 15s which is better than the browser default value of "Infinity"
+							enableHighAccuracy: View.Model.LogonGetGpsPositionEnableHighAccuracy
+						};
+
+						popup = new WaitingPopup(Lang.Trans("Getting GPS data..."));
+						popup.Show();
+						navigator.geolocation.getCurrentPosition(SavePosition, GpsAccessDenied, options);
+					}
+				}
+
+				function SavePosition(position)
+				{
+					$("#Longitude").val(position.coords.longitude);
+					$("#Latitude").val(position.coords.latitude);
+					$("#Accuracy").val(position.coords.accuracy);
+					
+					popup.Close();
+					$('#logon form').submit();
+				}
+
+				function GpsAccessDenied(error)
+				{
+					//if (error.code == 2 || error.code == 3)
+					alert(error.message);
+					popup.Close();
+					$('#logon form').submit();
+				}
+				
+			}
+
+			document.body.className = 'Logon';
+			document.getElementById("title").className += ' Logon';
+
+			$("input[type='submit'], input[type='button']").button();
+
+			// Log on when pressing 'Enter'
+			document.getElementById("UserName").onkeydown = function (e)
+			{
+				if (e.keyCode == 13)
+					LogOn();
+			};
+			document.getElementById("Password").onkeydown = function (e)
+			{
+				if (e.keyCode == 13)
+					LogOn();
+			};
+
+			//Prevent the login button to be pressed multiple times
+			$("#Login").click(function ()
+			{
+				//Use setTimeout to disable on next cycle. Otherwise it won't execute the logon actions.
+				setTimeout(function ()
+				{
+					$("#Login").prop("disabled", true);
+				}, 0);
+
+				LogOn();
+			});
+
+			$("#menu").empty();
+			var alertmessage = $("#ValidationSummary").hide().text();
+
+			if (alertmessage.trim())
+			{
+				
+				PopupMessage.Alert(alertmessage, Lang.Trans("Logon error"));
+				
+			}
+
+			$("#UserName").focus();
+			$("#UserName").attr("placeholder", 'Username').blur();
+			$("#Password").attr("placeholder", 'Password').blur();
+			$("#NewPassword").attr("placeholder", 'New password').blur();
+			$("#NewPasswordRetype").attr("placeholder", 'Confirm new password').blur();
+
+			// Add headers if placeholders are not supported
+			if (!SupportPlaceholder())
+				$(".PlaceholderUnsupported").show();
+			else
+				$(".PlaceholderUnsupported").remove();
+
+			if (window.screen.width < 500)
+			{
+				setInterval(function ()
+				{
+					$("#logon").css("visibility", "visible");
+					$("#logo a").css("visibility", "hidden");
+
+				}, 1500);
+			}
+
+			if (window.RunningNativeApp)
+			{
+				$("#ChangeServerUrlForNativeApp").show();
+				$("#ChangeServerUrlForNativeApp").button();
+				$("#ChangeServerUrlForNativeApp").click(function ()
+				{
+					NativeApplication.ChangeUrl();
+				});
+			}
+
+			HandlerQueryStringLogonCredentials();
+		});
+	</script>
+	<div id="PasswordWrapper">
+	
+	 <div id="logon" class="LogonPanel TFPPanel">
+		<form action="/Core/Account/LogOn?ReturnUrl=%2fMobileWeb%2fMobileWeb%2fTripView" method="post">
+			<div id="ValidationSummary" title="Caution"><p></p></div>
+			
+			<div class="PlaceholderUnsupported" style="display: none">
+				<b class="PlaceholderUnsupported">User name:</b>
+				<br />
+			</div>
+			<input class="text-box single-line" id="UserName" name="UserName" type="text" value="" />
+			
+				<br />
+				<div class="PlaceholderUnsupported" style="display: none">
+					<b>Password:</b>
+					<br />
+				</div>
+				<input class="text-box single-line password" id="Password" name="Password" type="password" value="" />
+			<div class="buttons">
+				<input type="button" id="Login" value="Login" />
+			</div>
+			
+			<div>
+				<input id="Longitude" name="Longitude" style="display: none"/>
+			</div>
+			<div>
+				<input id="Latitude" name="Latitude" style="display: none"/>
+			</div>
+			<div>
+				<input id="Accuracy" name="Accuracy" style="display: none"/>
+			</div>
+		</form>
+		<div class="buttons">
+			<button id="ChangeServerUrlForNativeApp" style="display: none">Change URL</button>
+		</div>
+	</div>
+	</div>
+	<div id="version">
+		v2.17.1.35221
+	</div>
+
+	</div>
+	
+</body>
+
+</html>
